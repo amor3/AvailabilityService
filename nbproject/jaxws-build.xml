@@ -59,5 +59,21 @@
         <delete dir="${build.generated.sources.dir}/jax-ws/client"/>
         <delete dir="${build.generated.dir}/jax-wsCache/AuthorizationService"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-AuthorizationService"/>
+    <target name="wsimport-client-PriceService" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/PriceService"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/PriceService" destdir="${build.generated.dir}/jax-wsCache/PriceService" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/PriceService/wsdl/localhost_8080/PriceService/PriceService.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/PriceService/PriceService?wsdl" xnocompile="true" xendorsed="true">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/PriceService/wsdl/localhost_8080/PriceService/PriceService.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/PriceService"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/PriceService">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-PriceService" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/service"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/PriceService"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-AuthorizationService, wsimport-client-PriceService"/>
 </project>

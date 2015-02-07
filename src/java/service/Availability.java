@@ -23,6 +23,8 @@ import javax.xml.ws.WebServiceRef;
 @WebService(serviceName = "Availability")
 @Stateless()
 public class Availability {
+    @WebServiceRef(wsdlLocation = "http://localhost:8080/PriceService/PriceService?wsdl")
+    private PriceService_Service service_1;
 
     @WebServiceRef(wsdlLocation = "http://localhost:8080/AuthorizationServiceService/AuthorizationService?wsdl")
     private AuthorizationServiceService service;
@@ -87,7 +89,7 @@ public class Availability {
     }
 
     private String getPrice(String ticketID) {
-        return "AnropaPriceCheck123";
+        return checkPrice(ticketID);
     }
 
     private StringArray asStringArray(List<String> route) {
@@ -107,4 +109,14 @@ public class Availability {
         return port.authorizationServiceOperation(username, password);
     }
 
+    private String checkPrice(java.lang.String ticketID) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        service.PriceService port = service_1.getPriceServicePort();
+        return port.checkPrice(ticketID);
+    }
+
+    
+    
+    
 }
