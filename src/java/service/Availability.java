@@ -53,29 +53,37 @@ public class Availability {
     public StringArray checking(
             @WebParam(name = "username") String username,
             @WebParam(name = "password") String password,
-            @WebParam(name = "routes") StringArray routes,
+            @WebParam(name = "routes") String routes,
             @WebParam(name = "travelDate") String travelDate) {
 
+            String[] parsedRoutes = routes.split(":");
+            
         if (authorizationServiceOperation(username, password)) {
-            return getAvailabilityAndPrice(routes, travelDate);
+            return getAvailabilityAndPrice(parsedRoutes, travelDate);
         }
 
         return null;
     }
 
-    private StringArray getAvailabilityAndPrice(StringArray wantedRoute, String date) {
-
+    private StringArray getAvailabilityAndPrice(String[] wantedRoute, String date) {
+        
+        List<String> returnList = new ArrayList<>();
+        
         for (List<String> route : AVAILABLE_ROUTES) {
-            if (route.get(1).equalsIgnoreCase(wantedRoute.get(0))
-                    && route.get(route.size() - 1).equalsIgnoreCase(wantedRoute.get(wantedRoute.getSize() - 1))
-                    && route.get(route.size()).equalsIgnoreCase(date)) {
+                        
+            if (route.get(1).equalsIgnoreCase(wantedRoute[0])
+                    && route.get(route.size() - 2).equalsIgnoreCase(wantedRoute[wantedRoute.length - 1])
+                    && route.get(route.size() - 1).equalsIgnoreCase(date)) {
 
-                route.add(getPrice(route.get(0)));
+                returnList.addAll(route);
+                returnList.add(getPrice(route.get(0)));
 
-                return asStringArray(route);
+                return asStringArray(returnList);
             }
         }
-        return null;
+        
+        returnList.add("Something went wrong when searching for availability...");
+        return asStringArray(returnList);
     }
 
     private String getPrice(String ticketID) {
