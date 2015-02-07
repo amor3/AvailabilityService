@@ -87,7 +87,7 @@ public class Availability {
     }
 
     private String getPrice(String ticketID) {
-        return "123";
+        return "AnropaPriceCheck123";
     }
 
     private StringArray asStringArray(List<String> route) {
